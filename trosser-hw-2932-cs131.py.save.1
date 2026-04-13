@@ -1,0 +1,12 @@
+import sys
+
+# Assignment:  Write a program that prints all the unique command line arguments it receives in alphabetical order, avoiding any duplication
+ 
+# After fumbling around in Severance, I noticed behavior he described in Chapter 6 on strings and in Chapter 8 on Lists - 'slicing'. 
+# Slicing works on any 'sequence' type of data structure. Strings and Lists are sequences, and sys.argv is a sequence (a List), and the slicing logic I use 1:, enclosed in [], 
+# results in all args except the first (which is the script name - not an input to the script.  And this allows one to go from the 2nd position of the args, 
+# to the last of however many the user inputs.   It allows for any number of input arguments!  Sweet.  
+# Next, I use a concept of a Set, I found it on a youtube video that compares lists and dictionaries.  It introduced this idea of a set, and it 
+# has a unique proporty, no matter what you put in it, if you put in a duplicate of somehting you already put in, it won't add it.  It doesn't throw an exception, 
+# it just gives you all you added to the object, that is unique.  No duplicates allowed.      are using a python Set - which is unique in that it
+print(sorted(set(sys.argv[1:])))

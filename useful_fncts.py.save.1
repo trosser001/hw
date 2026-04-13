@@ -1,0 +1,9 @@
+#collection of functions I've created to help in variety of processes
+
+#data transforms
+
+def convert_dollar_string_to_number(dollar_string):
+	""" Converts a string like '$100,000.00' to a number of
+	dollars in Float: $100,000.00"""
+	converted_string = float(dollar_string.replace("$",'').replace(",",''))
+	return converted_string
