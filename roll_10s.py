@@ -6,7 +6,10 @@
 
 # 		Any other values are rejected, and program terminates.
 
- 
+# April 14, 2026: per Peer Reviews, I have changed the code to meet the requirements of the assignment; I was supposed to return the 
+# percentage of rolls that were multiples of 10, but I was returning the number of multiples of 10.	
+# The change is in the function count_multiples_of_ten, where I have changed the return value to return the percentage of rolls that were multiples of 10.
+
 import sys, random
 
 #  function to test a parameter for numeric values
