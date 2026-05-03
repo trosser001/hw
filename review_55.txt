@@ -1,0 +1,40 @@
+Program Reviewed: /users/abrick/pr/131B/2938/55.py
+
+Code Reviewed:
+# Program that indicates the single greatest integer in the text whose pathname is passed as argument.
+import sys
+import re
+greatest = 0
+numbers = []
+try:
+ fname = sys.argv[1] #saves the name of the passed file
+ fhand = open(fname) #tries to open the file
+except IndexError: #closes program if a file is not given
+ print('No file passed')
+ sys.exit()
+except: #keeping this general as I only care about whether the file can open
+ print('File Error: File cannot be opened or does not exist', 'File name:',fname)
+ sys.exit()
+for line in fhand:
+ line = line.rstrip() #removes trailing whitespace
+ filter = re.findall('[0-9]+',line) #pulls out all numbers from the text per line
+ if len(filter) > 0 : #saves the pulled numbers in a string as integers
+  for num in filter:
+   numbers.append(int(num))
+#prints the single greatest integer in the text
+print("The single greatest integer in the text is", str(max(numbers)))
+
+
+  - Good top-level structure and clear intent.
+  - Nice argument check using IndexError and a readable extraction loop.
+  - Correct conversion to int before max().
+
+
+  - Avoid bare except; use explicit exceptions for open failures (FileNotFoundError, PermissionError, UnicodeDecodeError).
+  - Use with open(fname) as fhand: for automatic file closing.
+  - If no numbers are found, max(numbers) will fail. Add a guard like if numbers: ... else: print("No integers found.").
+  - Variable name "filter" shadows a Python built-in; use a name like matches.
+  - For comma-formatted numbers (e.g., 559,000), current regex captures 559 and 000 separately.
+
+Try 
+  - integers = [int(x) for line in fhand for x in re.findall(r"\d+", line)]

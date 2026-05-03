@@ -13,11 +13,11 @@ import string
 def unique_words(file_name_and_location): # function to perform cleansing and count of unique words in file passed to the function
     
 	unique_words_to_count=set()	# as I used in the unique parm exercise, a set is a datastructure which automagically eliminates any duplicates you might add.
-    just_delete_these=string.punctuation + string.digits	# .punctuation and .digits are attributes/constants defined in the "string" library - search them up - powerful.
-    remove=str.maketrans('', '',just_delete_these)	#  this uses the native string related class in python3 - 'str', vs the 'string' class I used above
-                  	                            	#  maketrans is a "mapping" table - very efficient.  syntax: find (arg1 - '',) and replaces with (arg2 -'',), and arg3 (to_remove) is a string of characters you want to delete. I 
-                        	                    	#  don't search for anything to be replaced, I just have it delete what is in my list (just_delete_these)
-								   					#  --- it is used by the string ".translate" method to find&replace, and to remove things from strings
+	just_delete_these=string.punctuation + string.digits	# .punctuation and .digits are attributes/constants defined in the "string" library - search them up - powerful.
+	remove=str.maketrans('', '',just_delete_these)	#  this uses the native string related class in python3 - 'str', vs the 'string' class I used above
+	#  maketrans is a "mapping" table - very efficient.  syntax: find (arg1 - '',) and replaces with (arg2 -'',), and arg3 (to_remove) is a string of characters you want to delete.
+	#  I don't search for anything to be replaced, I just have it delete what is in my list (just_delete_these)
+	#  --- it is used by the string ".translate" method to find&replace, and to remove things from strings
 	try: 
 		with open(file_name_and_location, "r") as file: # "with" is a context manager thing - it manages closing the file if anything goes wrong.
             
@@ -29,7 +29,7 @@ def unique_words(file_name_and_location): # function to perform cleansing and co
                 
 				list_of_words=cleanline.split() #  uses a string function that separates words...IMPORTANT - gives a LIST of words, which in order to stuff in a SET, you use setname.update(listofwords)
                 
-				uniques_wordsupdate(list_of_words) #  this 'update' puts each word in the list of words, into the set "unique_words_to_count".  The set magically deletes all duplicates.
+				unique_words.update(list_of_words) #  this 'update' puts each word in the list of words, into the set "unique_words_to_count".  The set magically deletes all duplicates.
                 
 		return unique_words  #  returns the count of unique cleaned words.
     
@@ -41,7 +41,7 @@ def unique_words(file_name_and_location): # function to perform cleansing and co
 # USER INSTRUCTIONS: you are welcome to try any file; just enter the address and name of a file and you'll be presented the estimated count of unique words it contains
 
 file_name_and_location = '/users/abrick/resources/urantia.txt' 
-num_of_unique_words = count_unique_words(file_name_and_location) 
+num_of_unique_words = unique_words(file_name_and_location) 
 
 if num_of_unique_words is not None: 
 	print(f"Estimated count of unique words is: {num_of_unique_words} in '{file_name_and_location}'.")

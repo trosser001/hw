@@ -1,0 +1,7 @@
+xv.py	Excellent beginner solution that cleanly validates arguments, reads the file safely, finds integers (including negatives) with regex, and prints the maximum correctly.
+5z.py	Very strong and clear program that meets the assignment well, with good error handling and correct greatest-integer logic using a regex plus comparison loop.
+mj.py	Good, readable submission that correctly extracts integers and prints the maximum, though adding UTF-8 decode handling would make it a little more robust.
+hw.py	Nice use of regex and a clear flow for beginners, and it finds the correct maximum, but the output sentence format is less direct than just printing the number.
+h9.py	Great effort and solid character-by-character parsing logic, but it only captures digits and misses negative integers, which can affect correctness.
+z8.py	You correctly track a running maximum from integer tokens, but this approach only works when numbers are clean whitespace-separated words and may miss values attached to punctuation.
+5q.py	Good attempt to use regex, but this version has major runtime issues (converting a regex match object directly to int and re-searching the whole file each loop), so it does not produce a reliable result.

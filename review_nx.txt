@@ -1,0 +1,48 @@
+Program Reviewed: /users/abrick/pr/131B/2938/nx.py
+
+Code Reviewed:
+# Write a program that indicates the single greatest integer in the text whose pathname is passed as argument. Test with /users/abrick/resources/urantia.txt
+
+import re, sys
+
+# try to open file and raise exceptions if errors occur
+try:
+    f = open(sys.argv[1])
+except IndexError:
+    print ('No filename passed.')
+    exit()
+except FileNotFoundError:
+    print ('File not found.')
+    exit()
+except PermissionError:
+    print ('File not readable.')
+    exit()
+
+# create re-useable function that identifies all unique integers
+def unique_int(f):
+    ints = set()
+    for line in f:
+        # in each line, identify match object where numbers exist
+        line_ints = re.finditer(r"\d+", line)
+        # extract number from match object, convert to integer and store
+        for num in line_ints:
+            ints.add(int(num.group()))
+    return ints
+
+# find greatest integer
+int_set = unique_int(f)
+greatest_int = max(int_set)
+print(greatest_int)
+
+Peer Review Feedback:
+- What is working well:
+  - Strong exception handling with specific, user-friendly messages.
+  - Good decomposition into a helper function.
+  - Correct use of match objects via num.group().
+
+- Suggestions to improve:
+  - Add UnicodeDecodeError handling for read/decoding failures.
+  - Consider using with open(...) as f for automatic close.
+  - Using set() removes duplicates, which is valid for max but not needed for this assignment; list or generator would be simpler and preserve all occurrences.
+  - If file has no integers, max(int_set) raises an error; add a no-match check first.
+  - If you want to capture comma-separated integers (559,000), extend the pattern/normalization.

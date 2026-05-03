@@ -1,0 +1,42 @@
+Program Reviewed: /users/abrick/pr/131B/2938/hj.py
+
+Code Reviewed:
+import sys
+import re
+
+if len(sys.argv) != 2:
+    print("Need a file.")
+    sys.exit()
+
+try:
+    text = open(sys.argv[1]).read()
+except:
+    print("Cannot open file.")
+    sys.exit()
+
+# find all numbers
+numbers = re.findall(r'\d+', text)
+
+biggest = 0
+
+for num in numbers:
+    num = int(num)
+    if num > biggest:
+        biggest = num
+
+print(biggest)
+
+Peer Review Feedback:
+- What is working well:
+  - Clean and readable flow from argument check -> read file -> extract numbers -> max scan.
+  - Good use of regex with re.findall(r'\d+').
+  - Loop logic for tracking max is correct for non-empty positive matches.
+
+- Suggestions to improve:
+  - Replace the bare except with explicit exceptions (FileNotFoundError, PermissionError, UnicodeDecodeError).
+  - Use a context manager for the file: with open(sys.argv[1]) as f: text = f.read()
+  - Handle "no integers found" explicitly before printing, to avoid defaulting to 0 silently.
+  - If you want to support integers with commas (example: 559,000), current regex splits that into 559 and 000. Consider preprocessing commas in numeric tokens or using a more specific pattern.
+
+- Optional Pythonic simplification:
+  - After validation, you can do: print(max(int(x) for x in numbers))

@@ -7,12 +7,12 @@ import numpy as np
 # assignment: Write a program that shows ten unique random words, made only of letters, and over ten letters long, that occur in the text whose pathname is passed as argument. Test with /users/abrick/resources/urantia.txt 
 
 def unique_words(file_name_and_location): 
-    set_unique_words = set() # a set is a data structure that automatically eliminates duplicates
+    set_unique_words = set() 
     delete_these = string.punctuation + string.digits  # creates a variable which is a list of punctuation defined by Python geeks, and the set of digits (0-9).  This is a string.  it is used in maketrans
     remove = str.maketrans(delete_these, len(delete_these)*" ") # I finally figured this out: arg1: of maketrans is the search item, arg2: is the replace item. if you use a set of items to search for (delete_these), then the replacement item is actually requeired to be the length of the whole set of charatactes.  So i replace with a string the length of the concatenated punctiuation and digits. 
    
-    try: 
-        with open(file_name_and_location, "r") as file: 
+    try:
+        with open(file_name_and_location, "r", encoding="utf-8") as file: 
             for line in file:
                 line = line.lower() # converts all letters to lower case
                 cleanline = line.translate(remove) # deletes punctuation and digits from the text
@@ -20,9 +20,21 @@ def unique_words(file_name_and_location):
                 set_unique_words.update(list_of_words) # adds the list of words to the set
                 
         return list(set_unique_words) # returns the SET of unique words, but casts as a list, so it can be used by numpy random.choice
-    
+
+    except FileNotFoundError:
+        print(f"Error: file not found: '{file_name_and_location}'")
+        return None
+    except PermissionError:
+        print(f"Error: permission denied when opening '{file_name_and_location}'")
+        return None
+    except IsADirectoryError:
+        print(f"Error: expected a file but got a directory: '{file_name_and_location}'")
+        return None
+    except UnicodeDecodeError:
+        print(f"Error: could not decode '{file_name_and_location}' as UTF-8 text")
+        return None
     except Exception as e: # Per Prof Bricks instructions, I use a generic exception handler to catch all errors.
-        print(f"problem: unexpected error with input file occured: {e}") # if an error occurs, it prints the error and returns None
+        print(f"Error: unexpected error reading input file: {e}") # if an error occurs, it prints the error and returns None
         return None # python's version of null - it's a placeholder for when an error occurs, and controls the logic in the __main__ block.
 
 if __name__ == "__main__":
@@ -35,10 +47,16 @@ if __name__ == "__main__":
     file_name_and_location = sys.argv[1]
 
     #file_name_and_location = '/users/abrick/resources/urantia.txt' 
-    long_words = [word for word in unique_words(file_name_and_location) if len(word) > 10] # creates a list of all the unique words in the input file, that are over 10 letters long, using a list compression style loop.
-    random_long_words = np.random.choice(long_words, size=10, replace=False)  # 10 random words from the list of unique words - using numpy random.choice; we use it in Math 108 Data Science with Python.  It returns a set of 10 words, from the list of words, and replace = false, is it does not put the word it just chose back into the sample for the next selection.
+    all_unique_words = unique_words(file_name_and_location)
+    if all_unique_words is None:
+        sys.exit(1)
 
-    if random_long_words is not None: 
-        print(f"\nHere are 10 randomly chosen, unique words in '{file_name_and_location}':\n")
-        print(f"\n".join(random_long_words),"\n")
+    long_words = [word for word in all_unique_words if len(word) > 10] # creates a list of all the unique words in the input file, that are over 10 letters long, using a list compression style loop.
+    if len(long_words) < 10:
+        print(f"Error: found only {len(long_words)} unique words longer than 10 letters; need at least 10.")
+        sys.exit(1)
+
+    random_long_words = np.random.choice(long_words, size=10, replace=False)  # 10 random words from the list of unique words - using numpy random.choice; we use it in Math 108 Data Science with Python.  It returns a set of 10 words, from the list of words, and replace = false, is it does not put the word it just chose back into the sample for the next selection.
+    print(f"\nHere are 10 randomly chosen, unique words in '{file_name_and_location}':\n")
+    print(f"\n".join(random_long_words),"\n")
 

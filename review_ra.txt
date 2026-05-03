@@ -1,0 +1,49 @@
+Program Reviewed: /users/abrick/pr/131B/2938/ra.py
+
+Code Reviewed:
+# Write a program that indicates the single greatest integer
+# in the text whose pathname is passed as argument.
+# Test with /users/abrick/resources/urantia.txt
+
+import sys
+import re
+
+# Check if arg is passed
+try:
+        txt_file = open(sys.argv[1])
+except IndexError:
+        print('No filename passed.')
+except FileNotFoundError:
+        print('File not found.')
+except PermissionError:
+        print('File not readable.')
+
+txt = txt_file.read()
+txt_file.close()
+
+txt_list = list(txt.split())
+nums=[]
+num_list=[]
+
+# Find all of the numbers int the text, then add them to a list
+for i in txt_list:
+	nums = re.findall(r'\d+',i)
+	for j in nums:
+		num_list.append(int(j))
+
+print(max((num_list)))
+
+Peer Review Feedback:
+- What is working well:
+  - Nice use of regex extraction and int conversion.
+  - Clear handling intent for common input errors.
+  - Overall logic is understandable.
+
+- Critical fixes needed:
+  - After exception messages, the script continues and can crash because txt_file may not exist. Add sys.exit() (or return) in each exception path.
+  - Add UnicodeDecodeError handling for file read issues.
+  - If no integers are present, max(num_list) raises an error; add a guard for empty list.
+
+- Additional improvements:
+  - Use with open(...) as txt_file: for safer resource handling.
+  - Current regex will split comma-formatted integers (559,000) into separate pieces unless normalized first.
