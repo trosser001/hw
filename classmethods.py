@@ -6,30 +6,31 @@ import sys
 
 class Book:
     def __init__(self, book_name_loc):
-        match = re.search(r"^(?P<location>.*)/(?P<filename>[^/]+)$", book_name_loc)
+        match = re.search(r"^(.*)/([^/]+)$", book_name_loc)
         if not match:
             raise ValueError(f"Invalid path format: '{book_name_loc}'")
-        self.location = match.group("location")
-        self.filename = match.group("filename")
+        self.location = match.group(1)
+        self.filename = match.group(2)
         self.book_name_loc = book_name_loc
-        self._text = self._read_text()
+        self.book_text = self.read_book()
 
-    def _read_text(self):
+    def read_book(self):
         with open(self.book_name_loc, "r", encoding="utf-8") as file:
             return file.read()
 
     def count_unique_words(self):
-        words = re.findall(r"[a-zA-Z]+", self._text.lower())
+        words = re.findall(r"[a-zA-Z]+", self.book_text.lower())
         return len(set(words))
 
     def largest_integer(self):
-        numbers = re.findall(r"\d+", self._text)
+        numbers = re.findall(r"\d+", self.book_text)
         if not numbers:
             return None
         return max(int(value) for value in numbers)
 
-    def random_long_words(self, count=10, min_length=10):
-        words = re.findall(r"[a-zA-Z]+", self._text.lower())
+    def random_long_words(self):
+        count=min_length=10
+        words = re.findall(r"[a-zA-Z]+", self.book_text.lower())
         candidates = sorted({word for word in words if len(word) > min_length})
         if len(candidates) < count:
             raise ValueError(
@@ -75,7 +76,7 @@ def main():
         print(f"Largest integer: {largest}")
 
     try:
-        words = book.random_long_words(count=10, min_length=10)
+        words = book.random_long_words()
         print("10 random words over 10 characters:")
         for word in words:
             print(word)
