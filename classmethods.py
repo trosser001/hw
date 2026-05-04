@@ -15,14 +15,8 @@ class Book:
 # The class object is initialized with the path to the book file and store it in a class attribute, self.book_text
     def __init__(self, book_name_loc):
         # The path to the book file is stored in the book_name_loc attribute
-        match = re.search(r"^(.*)/([^/]+)$", book_name_loc) # The path to the book file is stored in the book_name_loc/this creates two groups i use below to store the path and the filename
-        # If the path is not valid, raise a ValueError
-        if not match:
-            raise ValueError(f"Invalid path format: '{book_name_loc}'")
-        self.location = match.group(1) # group(1) is location
-        self.filename = match.group(2) # group(2) is file name
         self.book_name_loc = book_name_loc
-        self.book_text = self.read_book() 
+        self.book_text = self.read_book()
 
     def read_book(self): # The book file is read and the text is stored in the book_text attribute- a memory hog, maybe. 
         with open(self.book_name_loc, "r", encoding="utf-8") as file:# open the book file and read the text
@@ -54,18 +48,18 @@ def main():
         print("Usage: python3 classmethods.py <path_to_text_file>")
         sys.exit(1)
 
-    file_name_and_location = sys.argv[1]
+    book_path = sys.argv[1]
 
     try:
-        book = Book(file_name_and_location) # create a Book object with the file name and location
+        book = Book(book_path)  # create a Book object with the path to the book file
     except FileNotFoundError:# if the file is not found, print the error message and exit the program
-        print(f"Error: file not found: '{file_name_and_location}'")
+        print(f"Error: file not found: '{book_path}'")
         sys.exit(1)
     except PermissionError:# the program doesn't have permission to read the file, print the error message and exit the program
-        print(f"Error: permission denied for '{file_name_and_location}'")
+        print(f"Error: permission denied for '{book_path}'")
         sys.exit(1)
     except UnicodeDecodeError:# the file is not encoded as UTF-8, print the error message and exit the program
-        print(f"Error: could not decode '{file_name_and_location}' as UTF-8 text")
+        print(f"Error: could not decode '{book_path}' as UTF-8 text")
         sys.exit(1)
     except ValueError as error:# if there is a ValueError, which is a built-in exception that is raised when a function encounters an error. This cleanly terminates the program.
         print(f"Error: {error}")
@@ -74,9 +68,7 @@ def main():
         print(f"Error: unexpected problem reading input file: {error}")
         sys.exit(1)
 
-    print(# print the book name and location using the class attributes filename and location
-        f"Input is a book named '{book.filename}' at location '{book.location}'."
-    )
+    print(f"Input book path: '{book_path}'")
     print(f"Unique words: {book.count_unique_words()}")# print the number of unique words in the book using the class method count_unique_words
 
     largest = book.largest_integer()# find the largest integer in the book using the class method largest_integer
